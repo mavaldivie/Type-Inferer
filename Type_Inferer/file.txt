@@ -1,0 +1,13 @@
+class Main {
+    main() : AUTO_TYPE {
+        let x : AUTO_TYPE <- 3 + 2 in {
+            case x of y :
+                IO => y.out_string("OK");
+            esac;
+        }
+    };
+    function succ(n : Int) : AUTO_TYPE
+    {
+        n + 1
+    };
+};

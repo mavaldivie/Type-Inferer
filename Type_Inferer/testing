@@ -1,0 +1,397 @@
+Test 1:
+Infered variable type on line 4, column 17: Variable x: Int.
+Infered return type on line 2, column 4: On method main, return type: Main.
+Infered parameter type on line 9, column 4: On method f, parameter a: Int.
+Infered parameter type on line 9, column 4: On method f, parameter b: Int.
+Infered parameter type on line 14, column 4: On method g, parameter a: Int.
+Infered parameter type on line 14, column 4: On method g, parameter b: Int.
+
+class Main inherits IO {
+    main() : AUTO_TYPE {
+        let x : AUTO_TYPE <- 3 + 2 in {
+            case x of
+                y : Int => out_string("Ok");
+            esac;
+        }
+    };
+    f(a: AUTO_TYPE, b: AUTO_TYPE) : AUTO_TYPE {
+        if (a=1) then b else
+            g(a + 1, b/2)
+        fi
+    };
+    g(a: AUTO_TYPE, b: AUTO_TYPE) : AUTO_TYPE {
+        if (b=1) then a else
+            f(a/2, b+1)
+        fi
+    };
+
+};
+
+
+
+Test 2:
+Errors while checking types:
+Error on line 6, column 4: Incompatible types Int and String
+
+class A {
+    a (n: Int) : Int { 0 };
+};
+
+class B inherits A {
+    a (x: String) : String { 1 };
+};
+class Main {
+    x: Int;
+
+    main (): Object {
+        let a: Main in a.f()
+    };
+
+    f() : Int {
+        0
+    };
+};
+
+
+Test 3:
+Infered return type on line 7, column 4: On method init, return type: Point.
+Infered attribute type on line 3, column 6: On class Point, attribute x: Int.
+Infered attribute type on line 3, column 6: On class Point, attribute y: Int.
+
+class Main { main (): Object { 0 }; };
+class Point {
+    x: AUTO_TYPE;
+    y: AUTO_TYPE;
+
+    init(x0: Int, y0: Int): AUTO_TYPE {{
+        x <- x0;
+        y <- y0;
+        self;
+    }};
+};
+
+
+Test 4:
+Infered parameter type on line 3, column 4: On method ackermann, parameter m: Int.
+Infered parameter type on line 3, column 4: On method ackermann, parameter n: Int.
+Infered return type on line 3, column 4: On method ackermann, return type: Object.
+
+class Main { main (): Object { 0 }; };
+class Ackermann {
+    ackermann(m: AUTO_TYPE, n: AUTO_TYPE): AUTO_TYPE {
+        if m = 0 then n + 1 else
+            if n = 0 then ackermann(m - 1, 1) else
+                ackermann(m - 1, ackermann(m, n - 1))
+            fi
+        fi
+    };
+};
+
+
+Test 5:
+Infered parameter type on line 4, column 4: On method f, parameter a: Int.
+Infered parameter type on line 4, column 4: On method f, parameter b: Int.
+Infered parameter type on line 10, column 4: On method g, parameter a: Int.
+Infered parameter type on line 10, column 4: On method g, parameter b: Int
+
+class Main {
+    main (): Object { 0 };
+
+    f(a: AUTO_TYPE, b: AUTO_TYPE): AUTO_TYPE {
+        if a = 1 then b else
+            g(a + 1, b / 1) 
+        fi
+    };
+    
+    g(a: AUTO_TYPE, b: AUTO_TYPE): AUTO_TYPE {
+        if b = 1 then a else
+            f(a / 2, b + 1) 
+        fi
+    };
+};
+
+
+Test 6:
+Infered parameter type on line 32, column 4: On method recursive_fibonacci, parameter n: Int.
+Infered return type on line 32, column 4: On method recursive_fibonacci, return type: Int.
+Infered parameter type on line 36, column 4: On method iterative_fibonacci, parameter n: Int.
+Infered return type on line 36, column 4: On method iterative_fibonacci, return type: Int.
+
+class A { };
+
+class B inherits A { };
+
+class C inherits A { };
+
+class Main inherits IO {
+    number: Int <- 5;
+
+    main () : Object {
+        0
+    };
+    
+    testing_case() : IO {
+        let a: A <- new C in 
+            case a of
+                x: B => out_string("Is type B.\n");
+                x: C => out_string("Is type C.\n");
+            esac
+    };
+    
+    testing_fibonacci(n: Int) : IO {{
+        out_string("Iterative Fibonacci : ");
+        out_int(iterative_fibonacci(5));
+        out_string("\n");
+
+        out_string("Recursive Fibonacci : ");
+        out_int(recursive_fibonacci(5));
+        out_string("\n");
+    }};
+    
+    recursive_fibonacci (n: AUTO_TYPE) : AUTO_TYPE {
+        if n <= 2 then 1 else recursive_fibonacci(n - 1) + recursive_fibonacci(n - 2) fi
+    };
+    
+    iterative_fibonacci(n: AUTO_TYPE) : AUTO_TYPE {
+        let  i: Int <- 2, n1: Int <- 1, n2: Int <- 1, temp: Int in {
+            while i < n loop
+                let temp: Int <- n2 in {
+                    n2 <- n2 + n1;
+                    n1 <- temp;
+                    i <- i + 1;
+                }
+            pool;
+            n2;
+        }
+    };
+};
+
+
+Test 7:
+class Main {
+    a: Int
+    
+    b: String
+    
+    main () : Object { let a: Int <- "" in 0 }
+    
+    errors() : Object {
+        case a of
+            x: Int => (new IO).out_int(x)
+            y: String => (new IO).out_string(x)
+        esac
+    }
+};
+
+Several errors: missing semicolon after 'A: Int',  'b: String',
+after all methods declarations and after lines inside case of.
+Also incompatible types between 0 and "" inside let, undeclared x 
+at the time of declaration of variable and incompatible types 
+between x and string in declaration of y.
+Correct code:
+
+class Main {
+    a: Int;
+    b: String;
+    main () : Object { let a: Int <- 1 in 0 };
+    errors() : Object {
+        case a of
+            x: Int => (new IO).out_int(a);
+            y: String => (new IO).out_string(b);
+        esac
+    };
+};
+
+
+Test 8:
+Unresolved reference Test1 at line 26, column 8
+
+class Main {
+    main(): Object {
+        (new Alpha).print()
+    };
+};
+class Test {
+    test1: Object;
+
+    testing1(): Int {
+        2 + 2
+    };
+
+    test2: Int <- 1;
+
+    test3: String <- "1";
+
+    testing2(a: Alpha, b: Int): Int {
+        2 + 2
+    };
+
+    testing3(): String {
+        "2 + 2"
+    };
+
+    testing4(): String {
+        Test1 <- "Hello World" -- Identifiers begin with a lower case letter
+    };
+};
+class Alpha inherits IO {
+    print() : Object {
+        out_string("reached!!\n")
+    };
+};
+
+
+Test 9:
+Unresolved reference - at line 20, column 16
+
+class Main {
+    main(): Object {
+        (new Alpha).print()
+    };
+};
+class Test {
+    test1: Object;
+    testing1(): Int {
+        2 - 2
+    };
+    test2: Int <- 1;
+    test3: String <- "1";
+    testing2(a: Alpha, b: Int): Int {
+        2 + 2
+    };
+    testing3(): String {
+        "2 + 2"
+    };
+    testing4(): Int {
+        test1 <-- ~(1 + 2 + 3 + 4 + 5) -- The left side must be an expression
+    };
+};
+class Alpha inherits IO {
+    print() : Object {
+        out_string("reached!!\n")
+    };
+};
+
+
+Test 10:
+Unresolved reference <= at line 12, column 18
+
+class Main {
+    main(): Object {
+        (new Alpha).print()
+    };
+};
+class Test {
+    test1: Object;
+    testing1(): Int {
+        2 + 2
+    };
+    test2: Int <- 1;
+    test3: String <= "1";
+
+    testing2(a: Alpha, b: Int): Int {
+        2 + 2
+    };
+    testing3(): String {
+        "2 + 2"
+    };
+};
+class Alpha inherits IO {
+    print() : Object {
+        out_string("reached!!\n")
+    };
+};
+
+
+Test 11:
+Unresolved reference ; at line 36, column 22
+
+class Main {
+    main(): Object {
+        (new Alpha).print()
+    };
+};
+class Test {
+    test1: Object;
+    testing1(): Int {
+        2 + 2
+    };
+    test2: Int <- 1;
+    test3: String <- "1";
+    testing2(a: Alpha, b: Int): Int {
+        2 + 2
+    };
+    testing3(): String {
+        "2 + 2"
+    };
+    testing4(x: Int, y: Int): Test {
+        self
+    };
+    testing5(a: String, b: String): IO {
+        if a.length() < b.length() then
+            (new IO).out_string("La cadena \"".concat(b).concat("\" es mas larga que la cadena \"").concat(a).concat("\"."))
+        else
+            if a.length() = b.length() then
+                (new IO).out_string("La cadena \"".concat(a).concat("\" mide igual que la cadena \"").concat(b).concat("\"."))
+            else
+                (new IO).out_string("La cadena \"".concat(a).concat("\" es mas larga que la cadena \"").concat(b).concat("\"."))
+            fi
+        fi
+    };
+    pow: Int <- 1;
+    count: Int <- 0;
+    testing6(a: Int): IO {
+            count <- 0;
+            pow <- 1;
+            while pow < a
+            loop
+                {
+                    count <- count + 1;
+                    pow <- pow * 2;
+                }
+            pool;
+            (new IO).out_string("El logaritmo en base 2 de ").out_int(a).out_string(" es ").out_int(count);
+        }
+    };
+};
+class Test2 {
+    test1: Test <- new Test;
+    testing1(): Test {
+        test1.testing4(1 + 1, 1 + 2).testing4(2 + 3, 3 + 5).testing4(5 + 8, 8 + 13)
+    };
+    testing2(x: Int, y: Int): Test2 {
+        self
+    };
+    testing3(): Test2 {
+        testing2(1 + 1, 1 + 2).testing2(2 + 3, 3 + 5).testing2(5 + 8, true + fALSE)
+    };
+    testing4(): Object {
+        test1@Object.copy()
+    };
+};
+class Alpha inherits IO {
+    print() : Object {
+        out_string("reached!!\n")
+    };
+};
+
+
+Test 12:
+Inferences:
+Infered variable type on line 4, column 17: Variable x: Int.
+Infered return type on line 2, column 4: On method main, return type: IO.
+Infered return type on line 9, column 13: On method succ, return type: Int.
+
+class Main {
+    main() : AUTO_TYPE {
+        let x : AUTO_TYPE <- 3 + 2 in {
+            case x of y :
+                IO => y.out_string("OK");
+            esac;
+        }
+    };
+    function succ(n : Int) : AUTO_TYPE
+    {
+        n + 1
+    };
+};
